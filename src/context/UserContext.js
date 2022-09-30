@@ -1,25 +1,44 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useCallback } from 'react';
 import ApiClient from '../ApiClient';
+import { craftErrorObj, craftLoadingObj, craftLoadedObj } from './utils';
 
 const UserContext = createContext(null);
 
 const UserProvider = ({ children }) => {
-  const [result, setResult] = useState(null);
+  const [user, setUser] = useState(null);
 
-  const signIn = async ({ email, password }) => {
-    setResult({
-      status: 'LOADING',
-      tms: Date.now()
-    });
-    const res = await ApiClient.authenticate({email, password});
-    setResult({
-      status: res.error ? 'ERROR' : 'LOADED',
-      tms: Date.now(),
-      result: res
-    });
-  };
+  const signIn = useCallback(async ({ email, password }) => {
+    setUser(craftLoadingObj(user));
+    const res = await ApiClient.authenticate({ email, password });
+    console.log('res', res);
+    if (res.error) {
+      setUser(craftErrorObj(res.error));
+    } else {
+      setUser(craftLoadedObj(res.user));
+      if (res.auth) {
+        ApiClient.setToken({ token: res.auth.token, maxAge: res.auth.maxAgeMs / 1000 })
+      }
+    }
+    return res;
+  }, [user]);
 
-  const value = { result, signIn };
+  const fetchUser = useCallback(async () => {
+    setUser(craftLoadingObj(user));
+    const res = await ApiClient.fetchUser();
+    if (res.error) {
+      setUser(craftErrorObj(res.error));
+    } else {
+      setUser(craftLoadedObj(res));
+    }
+    return user;
+  }, [user])
+
+  const signOut = useCallback(() => {
+    setUser(null);
+    return ApiClient.logOut();
+  }, []);
+
+  const value = { user, signIn, fetchUser, signOut };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 }

@@ -1,16 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
+import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
-import Toast from 'react-bootstrap/Toast';
 
 import { useAuth } from '../context/UserContext';
+import { useNavigate } from '../router';
 
 const SignIn = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
-  const [showAuthError, setShowAuthError] = useState(false);
-  const { result, signIn } = useAuth();
+  const [isWorking, setIsWorking] = useState(false);
+  const [authError, setAuthError] = useState(false);
+  const { signIn, signOut } = useAuth();
+  const navigate = useNavigate();
   const { email, password } = formData;
+
+  useEffect(() => {
+    // if somebody visits this page,
+    // treat it as a sign-out
+    // and throw away their user and their token
+    signOut();
+  }, [signOut]);
   
   const handleChange = (e) => {
     const prop = e.target.name;
@@ -21,63 +32,63 @@ const SignIn = () => {
     })
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('submit', formData);
-    //setIsWorking(true);
-    signIn(formData);
+    setIsWorking(true);
+    const result = await signIn(formData);
+    if (result.error) {
+      setIsWorking(false);
+      setAuthError(result.error.message || 'An unknown error occrred.');
+    } else {
+      navigate('/');
+    }
   }
 
-  console.log('result', result);
-
   return (
-    <>
-      <Form
-        onSubmit={handleSubmit}
-      >
-        <fieldset disabled={result?.status === 'LOADING'}>
-          <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>Email Address</Form.Label>
-            <Form.Control
-              name="email"
-              type="email"
-              placeholder="e.g. myemail@domain.com"
-              value={email}
-              onChange={handleChange}
-              autoFocus
-            />
-            <Form.Text className="text-muted">
-              We'll never share your email with anyone else.
-            </Form.Text>
-          </Form.Group>
-
-          <Form.Group className="mb-3" controlId="formBasicPassword">
-            <Form.Label>Password</Form.Label>
-            <Form.Control
-              name="password"
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={handleChange}
-              minLength={8}
-            />
-          </Form.Group>
-          <Button
-            variant="success"
-            type="submit"
+    <div style={{maxWidth: 480, margin: '0 auto'}}>
+      <h1 className="display-6 text-center my-3">My IoT Solution</h1>
+      {authError && <Alert className="mb-3" variant={isWorking ? 'secondary' : 'danger'}>Login failed: {authError}</Alert>}
+      <Card>
+        <Card.Body>
+          <Card.Title>Sign In</Card.Title>
+          <Form
+            onSubmit={handleSubmit}
           >
-            {result?.status === 'LOADING' ? 'Submitting ...' : 'Submit'}
-          </Button>
-        </fieldset>
-      </Form>
-      <Toast onClose={() => setShowAuthError(false)} show={showAuthError} delay={3000} autohide>
-          <Toast.Header>
-            <strong className="me-auto">Bootstrap</strong>
-            <small>11 mins ago</small>
-          </Toast.Header>
-          <Toast.Body>Woohoo, you're reading this text in a Toast!</Toast.Body>
-        </Toast>
-    </>
+            <fieldset disabled={isWorking}>
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Label>Email Address</Form.Label>
+                <Form.Control
+                  name="email"
+                  type="email"
+                  placeholder="e.g. myemail@domain.com"
+                  value={email}
+                  onChange={handleChange}
+                  autoFocus
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3" controlId="formBasicPassword">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  name="password"
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={handleChange}
+                  minLength={8}
+                />
+              </Form.Group>
+              <Button
+                variant="success"
+                type="submit"
+              >
+                {isWorking ? 'Submitting ...' : 'Sign In'}
+              </Button>
+            </fieldset>
+          </Form>
+        </Card.Body>
+      </Card>
+    </div>
   )
 }
 

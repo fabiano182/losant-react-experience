@@ -29,8 +29,10 @@ class ApiClient {
       }
     } catch (e) {
       result = {
-        error: true,
-        message: e.message
+        error: {
+          type: e.type,
+          message: e.message
+        }
       }
     }
     return result;
@@ -38,17 +40,22 @@ class ApiClient {
 
   // user
   async authenticate({ email, password }) {
-    const result = await this.request({
+    return await this.request({
       path: '/api/auth',
       method: 'POST',
       body: { email, password }
     });
-    if (result.success) {
-      this.setToken({ token: result.auth.token, maxAge: result.auth.maxAgeMs / 1000 });
-    }
-    return result;
   }
-
+  logOut() {
+    this.removeToken();
+    return { success: true }
+  }
+  async fetchUser(msg) {
+    return await this.request({
+      path: '/api/me'
+    })
+  }
+  
   setToken({ token, maxAge }) {
     const cookieString = cookie.serialize(this.authCookieName, token, {
       maxAge,
@@ -57,7 +64,11 @@ class ApiClient {
     document.cookie = cookieString;
   }
   removeToken() {
-
+    const cookieString = cookie.serialize(this.authCookieName, '', {
+      maxAge: 0,
+      path: '/'
+    });
+    document.cookie = cookieString;
   }
 }
 
