@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import Spinner from 'react-bootstrap/Spinner';
 
 import { Navigate, useLocation, Outlet, Link } from '.';
 import { useAuth } from '../context/UserContext';
 import { isInitialLoading, isLoaded, isNotRequested } from '../context/utils';
 
+import Spinner from 'react-bootstrap/Spinner';
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
@@ -39,7 +39,7 @@ const PrivateRoutes = () => {
       <>
         <Navbar bg="light" expand="lg" fixed="top">
           <Container fluid>
-            <Navbar.Brand href="#home">My IoT Solution</Navbar.Brand>
+            <Navbar.Brand as={Link} to="/">My IoT Solution</Navbar.Brand>
             <NavDropdown align="end" title={<img style={{ borderRadius: 30, width: 30, height: 30 }} src={user.item.avatarUrl} alt={`${user.item.firstName || ''} ${user.item.lastName || ''}`} />}>
               <Dropdown.Header>{userName}</Dropdown.Header>
               <Dropdown.Item as={Link} to="/profile">View Profile</Dropdown.Item>
@@ -54,7 +54,7 @@ const PrivateRoutes = () => {
     );
   }
   if (isInitialLoading(user)) {
-    return (<>LOADING<Spinner role="status" animation="border" /></>);
+    return (<div className="text-center mt-5"><Spinner role="status" animation="border" /></div>);
   }
   // error
   return (<Navigate to="/login" state={{ from: location }} replace />);

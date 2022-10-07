@@ -4,6 +4,7 @@ import {
   Link,
   useNavigate,
   useLocation,
+  useParams,
   Navigate,
   Outlet
 } from 'react-router-dom';
@@ -16,6 +17,7 @@ export {
   Link,
   useNavigate,
   useLocation,
+  useParams,
   Navigate,
   Outlet,
   PrivateRoutes,

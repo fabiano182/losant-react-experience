@@ -4,7 +4,7 @@ class ApiClient {
   constructor() {
     this.authCookieName = process.env.REACT_APP_AUTH_COOKIE_NAME || 'authToken';
     this.token = cookie.parse(document.cookie)?.[this.authCookieName];
-    this.apiBase = process.env.REACT_APP_API_BASE;
+    this.apiBase = process.env.REACT_APP_API_BASE || '';
   }
 
   async request({
@@ -56,6 +56,7 @@ class ApiClient {
     })
   }
   
+  // session management
   setToken({ token, maxAge }) {
     const cookieString = cookie.serialize(this.authCookieName, token, {
       maxAge,
@@ -69,6 +70,20 @@ class ApiClient {
       path: '/'
     });
     document.cookie = cookieString;
+  }
+
+  // devices
+  async fetchDevices() {
+    return await this.request({
+      path: '/api/devices',
+      method: 'GET'
+    });
+  }
+  async fetchDevice({ deviceId }) {
+    return await this.request({
+      path: `/api/devices/${deviceId}`,
+      method: 'GET'
+    });
   }
 }
 
