@@ -12,6 +12,7 @@ import LogIn from './containers/LogIn';
 import Profile from './containers/Profile';
 import Device from './containers/Device';
 import Devices from './containers/Devices';
+import FourZeroFour from './containers/FourZeroFour';
 
 const App = () => {
   return (
@@ -24,12 +25,12 @@ const App = () => {
           <Route path="/devices/:deviceId" element={<Device />} exact />
           <Route path="/devices" element={<Devices />} exact />
           <Route path="/" element={<Navigate to="/devices" replace={true} />} exact />
-          <Route path="/" element={<Navigate to="/devices" replace={true} />} exact />
         </Route>
         <Route element={<PublicRoutes />}>
           {/* Routes that do not require authentication go down here */}
           <Route path="/login" element={<LogIn />} />
         </Route>
+        <Route path="*" element={<FourZeroFour />} />
       </Routes>
     </>
   );

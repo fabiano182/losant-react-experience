@@ -25,7 +25,7 @@ class ApiClient {
       status = result.status;
       result = await result.json();
       if (status < 200 || status >= 300) {
-        throw new Error(result.error || 'An unknown error occurred')
+        throw new Error(result.error?.message || 'An unknown error occurred')
       }
     } catch (e) {
       result = {
@@ -80,10 +80,12 @@ class ApiClient {
     });
   }
   async fetchDevice({ deviceId }) {
-    return await this.request({
+    const res = await this.request({
       path: `/api/devices/${deviceId}`,
       method: 'GET'
     });
+    console.log('res in client', res);
+    return res;
   }
 }
 
