@@ -13,7 +13,6 @@ import { useParams, Link } from '../router';
 const Device = (props) => {
   const { devices, fetchDevice } = useDevices();
   const { deviceId } = useParams();
-  console.log(devices, deviceId);
   const device = devices[deviceId];
   useEffect(() => {
     if (!device) {
@@ -25,7 +24,6 @@ const Device = (props) => {
     body = (<div className="text-center mt-5"><Spinner role="status" animation="border" /></div>);
     crumbText = 'Loading ...';
   } else if (isError(device)) {
-    console.log(device);
     body = (<Alert className="mt-5" variant="danger">Failed to fetch device: {device.error.message}</Alert>);
     crumbText = 'Error!';
   } else { 

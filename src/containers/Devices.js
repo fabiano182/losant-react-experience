@@ -19,7 +19,7 @@ const Devices = () => {
     body = (<div className="text-center mt-5"><Spinner role="status" animation="border" /></div>);
   }
   if (isError(deviceList)) {
-    body = (<Alert className="mt-5" variant="danger">Failed to fetch devices: {deviceList.error}</Alert>)
+    body = (<Alert className="mt-5" variant="danger">Failed to fetch devices: {deviceList.error.message}</Alert>)
   }
   if (isLoaded(deviceList)) {
     if (!deviceList.item.itemIds.length) {

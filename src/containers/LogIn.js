@@ -21,7 +21,7 @@ const SignIn = () => {
     // treat it as a sign-out
     // and throw away their user and their token
     signOut();
-  }, [signOut]);
+  }, []);
   
   const handleChange = (e) => {
     const prop = e.target.name;

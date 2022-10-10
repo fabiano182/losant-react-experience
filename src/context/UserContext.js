@@ -14,9 +14,6 @@ const UserProvider = ({ children }) => {
       setUser(craftErrorObj(res.error));
     } else {
       setUser(craftLoadedObj(res.user));
-      if (res.auth) {
-        ApiClient.setToken({ token: res.auth.token, maxAge: res.auth.maxAgeMs / 1000 })
-      }
     }
     return res;
   }, [user]);

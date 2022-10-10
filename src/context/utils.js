@@ -19,7 +19,7 @@ export const craftErrorObj = (error = {}) => ({
   isLoading: false,
   isError: true,
   tms: Date.now(),
-  error
+  error: typeof error === 'object' ? error : { message: error }
 });
 
 export const isNotRequested = (item) => !item;

@@ -25,7 +25,7 @@ class ApiClient {
       status = result.status;
       result = await result.json();
       if (status < 200 || status >= 300) {
-        throw new Error(result.error?.message || 'An unknown error occurred')
+        throw new Error(typeof result.error === 'string' ? result.error : (result.error?.message || 'An unknown error occurred'))
       }
     } catch (e) {
       result = {
@@ -40,11 +40,15 @@ class ApiClient {
 
   // user
   async authenticate({ email, password }) {
-    return await this.request({
+    const res = await this.request({
       path: '/api/auth',
       method: 'POST',
       body: { email, password }
     });
+    if (res.auth?.token) {
+      this.setToken({ token: res.auth.token, maxAge: res.auth.maxAgeMs / 1000 });
+    }
+    return res;
   }
   logOut() {
     this.removeToken();
@@ -58,6 +62,7 @@ class ApiClient {
   
   // session management
   setToken({ token, maxAge }) {
+    this.token = token;
     const cookieString = cookie.serialize(this.authCookieName, token, {
       maxAge,
       path: '/'
@@ -65,6 +70,7 @@ class ApiClient {
     document.cookie = cookieString;
   }
   removeToken() {
+    this.token = '';
     const cookieString = cookie.serialize(this.authCookieName, '', {
       maxAge: 0,
       path: '/'
@@ -84,7 +90,6 @@ class ApiClient {
       path: `/api/devices/${deviceId}`,
       method: 'GET'
     });
-    console.log('res in client', res);
     return res;
   }
 }
