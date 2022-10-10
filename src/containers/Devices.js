@@ -5,16 +5,21 @@ import Alert from 'react-bootstrap/Alert';
 import Container from 'react-bootstrap/Container';
 
 import { useDevices } from '../context/DevicesContext';
-import { isInitialLoading, isError, isLoaded } from '../context/utils';
+import { isInitialLoading, isError, isLoaded, isStale, isNotRequested } from '../context/utils';
 
 import { Link } from '../router';
 
 const Devices = () => {
   const { deviceList, devices, fetchDevices } = useDevices();
-  let body;
+  
   useEffect(() => {
-    fetchDevices();
-  }, [])
+    if (isNotRequested(deviceList) || isStale(deviceList)) {
+      fetchDevices();
+    }
+  }, [deviceList, fetchDevices]);
+
+  let body;
+
   if (isInitialLoading(deviceList)) {
     body = (<div className="text-center mt-5"><Spinner role="status" animation="border" /></div>);
   }

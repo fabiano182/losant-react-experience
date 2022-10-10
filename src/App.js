@@ -9,6 +9,7 @@ import {
 import './App.scss';
 
 import LogIn from './containers/LogIn';
+import LogOut from './containers/LogOut';
 import Profile from './containers/Profile';
 import Device from './containers/Device';
 import Devices from './containers/Devices';
@@ -22,8 +23,11 @@ const App = () => {
           {/* Any route requiring user authentication needs to be nested inside this <Routes> component */}
           {/* https://medium.com/@dennisivy/creating-protected-routes-with-react-router-v6-2c4bbaf7bc1c */ }
           <Route path="/profile" element={<Profile />} exact />
+          <Route path="/logout" element={<LogOut />} exact />
+          
           <Route path="/devices/:deviceId" element={<Device />} exact />
           <Route path="/devices" element={<Devices />} exact />
+          
           <Route path="/" element={<Navigate to="/devices" replace={true} />} exact />
         </Route>
         <Route element={<PublicRoutes />}>

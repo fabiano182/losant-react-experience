@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
@@ -6,23 +6,21 @@ import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 
 import { useAuth } from '../context/UserContext';
-import { useNavigate } from '../router';
+import { isLoaded } from '../context/utils';
+import { useNavigate, Navigate } from '../router';
 
-const SignIn = () => {
+const LogIn = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [isWorking, setIsWorking] = useState(false);
   const [authError, setAuthError] = useState(false);
-  const { signIn, signOut } = useAuth();
+  const { signIn, user } = useAuth();
   const navigate = useNavigate();
   const { email, password } = formData;
 
-  useEffect(() => {
-    // if somebody visits this page,
-    // treat it as a sign-out
-    // and throw away their user and their token
-    signOut();
-  }, []);
-  
+  if (isLoaded(user)) {
+    return (<Navigate to="/" />);
+  }
+
   const handleChange = (e) => {
     const prop = e.target.name;
     const value = e.target.value;
@@ -92,4 +90,4 @@ const SignIn = () => {
   )
 }
 
-export default SignIn;
+export default LogIn;

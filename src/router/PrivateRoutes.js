@@ -43,7 +43,7 @@ const PrivateRoutes = () => {
             <NavDropdown align="end" title={<img style={{ borderRadius: 30, width: 30, height: 30 }} src={user.item.avatarUrl} alt={`${user.item.firstName || ''} ${user.item.lastName || ''}`} />}>
               <Dropdown.Header>{userName}</Dropdown.Header>
               <Dropdown.Item as={Link} to="/profile">View Profile</Dropdown.Item>
-              <Dropdown.Item as={Link} to="/login">Sign Out</Dropdown.Item>
+              <Dropdown.Item as={Link} to="/logout">Sign Out</Dropdown.Item>
             </NavDropdown>
           </Container>
         </Navbar>
