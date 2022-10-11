@@ -19,7 +19,7 @@ npm install
 
 Finally, in the root of the project, create a `.env.example` file to a new file called `.env`. The file has the following values in it, which must be modified for your specific Losant application:
 
-- `PUBLIC_URL`: This is the URL for where the built React files will be publicly available. Most users prefer to serve these out of Losant's [Application Files](https://docs.losant.com/applications/files/) with a workflow that downloads and returns the `index.html` contents for any non-API-endpoint request to your [Experience Domain](https://docs.losant.com/experiences/domains/). The Template Library entry that corresponds to this repo takes this same approach.
+- `PUBLIC_URL`: This is the URL for where the built React files will be publicly available. Most users prefer to serve these out of Losant's [Application Files](https://docs.losant.com/applications/files/) with a workflow that downloads and returns the `index.html` contents for any non-API-endpoint request to your [Experience Domain](https://docs.losant.com/experiences/domains/). The Template Library entry that corresponds to this repo takes this same approach. For example, given the placeholder value of "https://files.onlosant.com/<APPLICATION_ID>/react-bundles/<EXPERIENCE_VERSION_NAME>" ...
   - Replace `<APPLICATION_ID>` with the ID of the Losant application backing this interface.
   - Replace `<EXPERIENCE_VERSION_NAME>` with the name of the Experience Version (usually "develop").
 - `REACT_APP_API_BASE`: This is the base Experience Domain or Slug that serves all Experience API endpoints requested by the interface. Unless a custom domain or slug has been applied, this is usually "https://`<APPLICATION_ID>`.onlosant.com".
