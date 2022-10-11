@@ -1,70 +1,126 @@
-# Getting Started with Create React App
+# Losant React Experience
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The repo demonstrates using a [React.js](https://reactjs.org/) front-end for a [Losant End User Experience](https://docs.losant.com/experiences/overview/).
 
-## Available Scripts
+## Getting Started
 
-In the project directory, you can run:
+Start by cloning this repository to your local environment and entering the created directory:
 
-### `npm start`
+```bash
+git clone losant-react-experience
+cd losant-react-experience
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Next, install the dependencies:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```bash
+npm install
+```
 
-### `npm test`
+Finally, in the root of the project, create a `.env.example` file to a new file called `.env`. The file has the following values in it, which must be modified for your specific Losant application:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- `PUBLIC_URL`: This is the URL for where the built React files will be publicly available. Most users prefer to serve these out of Losant's [Application Files](https://docs.losant.com/applications/files/) with a workflow that downloads and returns the `index.html` contents for any non-API-endpoint request to your [Experience Domain](https://docs.losant.com/experiences/domains/). The Template Library entry that corresponds to this repo takes this same approach.
+  - Replace `<APPLICATION_ID>` with the ID of the Losant application backing this interface.
+  - Replace `<EXPERIENCE_VERSION_NAME>` with the name of the Experience Version (usually "develop").
+- `REACT_APP_API_BASE`: This is the base Experience Domain or Slug that serves all Experience API endpoints requested by the interface. Unless a custom domain or slug has been applied, this is usually "https://`<APPLICATION_ID>`.onlosant.com".
+  - Replace `<APPLICATION_ID>` with the ID of the Losant application backing this interface.
+- `REACT_APP_AUTH_COOKIE_NAME`: This is the name of the cookie that holds the user's authentication token. This setting is optional; not providing a value defaults to "authToken".
 
-### `npm run build`
+### Included Packages
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+This demo repo utilizes the following [npm](https://www.npmjs.com/) packages in addition to those included by Create React App:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- [`cookie`](https://www.npmjs.com/package/cookie): Serializes the user's auth token for storage as a browser cookie, and parses that cookie to retrieve the auth token in subsequent sessions.
+- [`react-bootstrap`](https://www.npmjs.com/package/react-bootstrap): A set of React components based on the popular [Twitter Bootstrap](https://getbootstrap.com/) UI framework.
+- [`bootstrap`](https://www.npmjs.com/package/bootstrap): A peer dependency of `react-bootstrap`; this provides the necessary SASS files that style the components.
+- [`react-router-dom`](https://www.npmjs.com/package/react-router-dom): Routes the user through the various pages of the experience, including redirecting signed-out users attempting to view authenticated pages to the login page.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Developing
 
-### `npm run eject`
+First, create a `.env.local` in the project root, which will override any values defined in your `.env` file. At the very least, the file should include this line:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```txt
+PUBLIC_URL=''
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+This will cause the user interface to be served from `http://localhost:3000`.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Then, to run the interface locally, execute the following command:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```bash
+npm run start
+```
 
-## Learn More
+This will make the interface available at `http://localhost:3000`. Requests initiated by the interface will go to the `REACT_APP_API_BASE` environment variable defined in either `.env.local` or `.env`.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Building
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Before building the interface, verify that the correct value has been entered for the `PUBLIC_URL` variable in your `.env` file.
 
-### Code Splitting
+Then, run the following command to build the production-ready interface:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```bash
+npm run build
+```
 
-### Analyzing the Bundle Size
+## Deploying
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Once the interface is built, teh files output by the build command - including their specific folder structure and file names -  must be uploaded to the publicly available URL defined in the `PUBLIC_URL` environment variable.
 
-### Making a Progressive Web App
+If using Losant's [Application Files](https://docs.losant.com/applications/files/) to serve the interface, these files can be uploaded several ways. Two of them are described below ...
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Using the Losant CLI
 
-### Advanced Configuration
+The easiest method is to use the [Losant CLI](https://docs.losant.com/cli/overview/) to upload the build files. Using the command line, you can navigate to the Losant application's directory, remove any existing bundle, copy the newly built files into the local application directory, and then upload them to your Application Files (replacing the paths and `EXPERIENCE_VERSION_NAME`):
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+```bash
+cd /path/to/losant/application/directory
+rm -rf ./files/react-bundles/EXPERIENCE_VERSION_NAME
+cp -R /path/to/losant-react-experience/build ./files/react-bundles/EXPERIENCE_VERSION_NAME
+losant files upload
+```
 
-### Deployment
+### Manually in the Losant Interface
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Alternatively, the files can be manually uploaded to Application Files using the Losant interface.
 
-### `npm run build` fails to minify
+1. In your browser, visit your application's "Files".
+2. Create a `/react-bundles` directory if necessary.
+3. If a directory matching the name of your Experience Version already exists in the `/react-bundles` directory, delete it.
+4. Create a new directory matching your Experience Version name (i.e. `develop`).
+5. Drag all of the files in your local `/build` directory EXCEPT the `/css` and `/js` directories.
+6. Within your version directory in Application Files, create new directories `css` and `js`.
+7. Navigate to the `js` directory, and drag all of the files in your local `/build/js` directory into it.
+8. Navigate to the `css` directory, and drag all of the files in your local `/build/css` directory into it.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Routes
+
+All routes are defined in `App.js`. Routes are nested under a `PrivateRoutes` or `PublicRoutes` container, which determines if the user must be signed in to view that page. Additional routes can be added and nested further down within the application. Check out [React Router's documentation](https://reactrouter.com/) for more info.
+
+- `/`: Redirects signed-in users to `/devices`; this can be replaced with a custom home page if desired.
+- `/login`: Displays a form where the user can enter an email address and password to authenticate. If successful, the returned auth token is stored as a browser cookie and the user is redirected to the authenticated experience.
+- `/logout`: Removes the browser cookie, unsets the auth token in the API client, and redirects the user to `/login`.
+- `/devices`: Displays a bulleted list of the devices associated with the signed-in user. Implementations of this template should replace this with a dashboard or a table of devices.
+- `/devices/:deviceId`: Displays the full JSON object for a given device. In most cases, this would be replaced with a form for editing the device properties and/or a dashboard of current state values.
+- `/profile`: Displays the signed-in user's profile as a JSON object. Implementations of this template should replace this with a form allowing the user to edit portions of their profile.
+- `/*`: A catch-all route for visits to any route not defined above. Displays a simple 404 page.
+
+## Data Management
+
+Since this is a [single-page application](https://developer.mozilla.org/en-US/docs/Glossary/SPA), all requests to authenticate and retrieve application data are made asynchronously by the browser. To demonstrate a standardized approach, and to prevent extraneous, unnecessary HTTP requests, this repo includes a couple opinionated approaches on how to build out your solution.
+
+### API Client
+
+First, the repo includes an example API client that demonstrates how to use JavaScript's [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API), session management through cookies, and [async functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function) to build a robust, authenticated experience. Adding new endpoints to the client is a simple matter of copying an existing endpoint definition once you have defined a new route in your [experience API](https://docs.losant.com/guides/building-an-experience-api/overview/).
+
+### React Context
+
+There are two [context providers](https://reactjs.org/docs/context.html) included in the application: one for the user, and one for devices. Additional contexts can be added, and/or they can be combined into a single context provider.
+
+The context providers expose methods for initiating API calls through the API client; for informing the interface about the current status of in-progress requests; and for holding, normalizing, and exposing the response data from the requests that is then consumed by the interface.
+
+---
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app). For additional details on running locally, optimizing, building, and deploying, please visit the [Create React App repo](https://github.com/facebook/create-react-app).
+
+Copyright 2022 Losant IoT. [MIT License](LICENSE.txt).
