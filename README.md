@@ -65,7 +65,7 @@ npm run build
 
 ## Deploying
 
-Once the interface is built, teh files output by the build command - including their specific folder structure and file names -  must be uploaded to the publicly available URL defined in the `PUBLIC_URL` environment variable.
+Once the interface is built, the files output by the build command - including their specific folder structure and file names -  must be uploaded to the publicly available URL defined in the `PUBLIC_URL` environment variable.
 
 If using Losant's [Application Files](https://docs.losant.com/applications/files/) to serve the interface, these files can be uploaded several ways. Two of them are described below ...
 
