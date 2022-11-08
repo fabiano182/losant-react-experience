@@ -17,9 +17,9 @@ Next, install the dependencies:
 npm install
 ```
 
-Finally, in the root of the project, create a `.env.example` file to a new file called `.env`. The file has the following values in it, which must be modified for your specific Losant application:
+Now, in the root of the project, create a `.env` file to a new file using the included `.env.example` as a template. The file has the following values in it, which must be modified for your specific Losant application:
 
-- `PUBLIC_URL`: This is the URL for where the built React files will be publicly available. Most users prefer to serve these out of Losant's [Application Files](https://docs.losant.com/applications/files/) with a workflow that downloads and returns the `index.html` contents for any non-API-endpoint request to your [Experience Domain](https://docs.losant.com/experiences/domains/). The Template Library entry that corresponds to this repo takes this same approach. For example, given the placeholder value of "https://files.onlosant.com/<APPLICATION_ID>/react-bundles/<EXPERIENCE_VERSION_NAME>" ...
+- `PUBLIC_URL`: This is the URL for where the built React files will be publicly available. Most users prefer to serve these out of Losant's [Application Files](https://docs.losant.com/applications/files/) with a workflow that downloads and returns the `index.html` contents for any non-API-endpoint request to your [Experience Domain](https://docs.losant.com/experiences/domains/). The Template Library entry that corresponds to this repo takes this same approach. For example, given the placeholder value of `https://files.onlosant.com/<APPLICATION_ID>/react-bundles/<EXPERIENCE_VERSION_NAME>` ...
   - Replace `<APPLICATION_ID>` with the ID of the Losant application backing this interface.
   - Replace `<EXPERIENCE_VERSION_NAME>` with the name of the Experience Version (usually "develop").
 - `REACT_APP_API_BASE`: This is the base Experience Domain or Slug that serves all Experience API endpoints requested by the interface. Unless a custom domain or slug has been applied, this is usually "https://`<APPLICATION_ID>`.onlosant.com".
@@ -37,7 +37,9 @@ This demo repo utilizes the following [npm](https://www.npmjs.com/) packages in 
 
 ## Developing
 
-First, create a `.env.local` in the project root, which will override any values defined in your `.env` file. At the very least, the file should include this line:
+To develop the user interface in your local environment, start by creating a `.env.local` in the project root, which will override any values defined in your `.env` file. Included is a `.env.local.example` file; you may simply change the name of this file to `.env.local` to begin development.
+
+At the very least, the file should include this line:
 
 ```txt
 PUBLIC_URL=''
