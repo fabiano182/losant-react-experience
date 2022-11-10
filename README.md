@@ -76,9 +76,10 @@ If using Losant's [Application Files](https://docs.losant.com/applications/files
 The easiest method is to use the [Losant CLI](https://docs.losant.com/cli/overview/) to upload the build files. Using the command line, you can navigate to the Losant application's directory, remove any existing bundle, copy the newly built files into the local application directory, and then upload them to your Application Files (replacing the paths and `EXPERIENCE_VERSION_NAME`):
 
 ```bash
-cd /path/to/losant/application/directory
-rm -rf ./files/react-bundles/EXPERIENCE_VERSION_NAME
-cp -R /path/to/losant-react-experience/build ./files/react-bundles/EXPERIENCE_VERSION_NAME
+npm run build && \
+mkdir -p ../losant-cli/files/react-bundles && \
+rm -rf ../losant-cli/files/react-bundles/develop && \
+cp -R ./build ../losant-cli/files/react-bundles/develop && \
 losant files upload
 ```
 
