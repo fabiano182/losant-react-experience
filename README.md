@@ -65,7 +65,7 @@ Then, run the following command to build the production-ready interface:
 npm run build
 ```
 
-## Building Deploying
+## Deploying
 
 Once the interface is built, the files output by the build command - including their specific folder structure and file names -  must be uploaded to the publicly available URL defined in the `PUBLIC_URL` environment variable.
 
