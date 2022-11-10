@@ -65,7 +65,7 @@ Then, run the following command to build the production-ready interface:
 npm run build
 ```
 
-## Deploying
+## Building Deploying
 
 Once the interface is built, the files output by the build command - including their specific folder structure and file names -  must be uploaded to the publicly available URL defined in the `PUBLIC_URL` environment variable.
 
@@ -76,7 +76,6 @@ If using Losant's [Application Files](https://docs.losant.com/applications/files
 The easiest method is to use the [Losant CLI](https://docs.losant.com/cli/overview/) to upload the build files. Using the command line, you can navigate to the Losant application's directory, remove any existing bundle, copy the newly built files into the local application directory, and then upload them to your Application Files (replacing the paths and `EXPERIENCE_VERSION_NAME`):
 
 ```bash
-npm run build && \
 mkdir -p ../losant-cli/files/react-bundles && \
 rm -rf ../losant-cli/files/react-bundles/develop && \
 cp -R ./build ../losant-cli/files/react-bundles/develop && \
