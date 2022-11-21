@@ -10,6 +10,7 @@ const UserProvider = ({ children }) => {
   const signIn = useCallback(async ({ email, password }) => {
     setUser(craftLoadingObj(user));
     const res = await ApiClient.authenticate({ email, password });
+    console.log('signIn', res);
     if (res.error) {
       setUser(craftErrorObj(res.error));
     } else {
@@ -20,7 +21,7 @@ const UserProvider = ({ children }) => {
 
   const fetchUser = useCallback(async () => {
     setUser(craftLoadingObj(user));
-    const res = await ApiClient.fetchUser();
+    const res = await ApiClient.fetchUser(user);
     if (res.error) {
       setUser(craftErrorObj(res.error));
     } else {

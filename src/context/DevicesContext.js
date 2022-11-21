@@ -20,9 +20,9 @@ const DevicesProvider = ({ children }) => {
         setDeviceList(craftErrorObj(res.error));
       } else {
         const updatedDeviceList = Object.assign({}, res);
-        updatedDeviceList.itemIds = updatedDeviceList.items.map(({ id }) => id);
+        updatedDeviceList.itemIds = updatedDeviceList.devices.map(device => device.id);
         const updatedDevices = {};
-        updatedDeviceList.items.forEach((item) => {
+        updatedDeviceList.devices.forEach(item => {
           updatedDevices[item.id] = craftLoadedObj(item);
         });
         delete updatedDeviceList.items;

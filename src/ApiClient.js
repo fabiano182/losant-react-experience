@@ -43,10 +43,13 @@ class ApiClient {
     const res = await this.request({
       path: '/api/auth',
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
       body: { email, password }
     });
     if (res.auth?.token) {
-      this.setToken({ token: res.auth.token, maxAge: res.auth.maxAgeMs / 1000 });
+      this.setToken({ token: res.auth.token, maxAge: 3600 });
     }
     return res;
   }
@@ -56,8 +59,9 @@ class ApiClient {
   }
   async fetchUser(msg) {
     return await this.request({
-      path: '/api/me'
-    })
+      path: '/api/me',
+      method: 'GET'
+    });
   }
   
   // session management
